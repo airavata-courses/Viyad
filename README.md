@@ -1,8 +1,24 @@
-# Viyad
-Spring 2022 Project
+# view2
 
-Vignesh Reddy
+## Project setup
+```
+npm install
+```
 
-Saiprasad Omprakash Rane
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
-Renuka Srishti
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
