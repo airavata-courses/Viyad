@@ -1,6 +1,0 @@
-{"services":
-    {
-    //Sample test Api
-    "testAPI":{"apiName":"testAPI","host":"localhost","port":64834,"url":"localhost:64834/"}
-    }
-}
