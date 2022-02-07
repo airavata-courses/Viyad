@@ -2,7 +2,7 @@
   <div class="container">
     <div class = "input">
       <label for="dashboardname">Dashboard Name: &nbsp;</label>
-      <input type="text" id="dashboardname" name="dashboardname" required>
+      <input type="text" id="dashboardname" name="dashboardname" @change = "validateName">
       <div class = "datetime">
         <label for = "dtp">Please select date below:</label>
         <datetime format="YYYY-MM-DD H:i:s" v-model='dob' id= "dtp"></datetime>
@@ -30,8 +30,6 @@ export default {
   name: "CreateReport",
   components: {datetime},
   data() {
-    this.error_message = "Hi"
-    this.showerror = false
     let greenIcon;
     let blueIcon;
     // let marker_data = []
@@ -67,6 +65,8 @@ export default {
       center: [39.163896, -86.525816],
       markerLatLng: [39.163896, -86.525816],
       marker_data_show: marker_data_show,
+      error_message: "",
+      showerror : false
     };
   },
   methods: {
@@ -74,6 +74,8 @@ export default {
       var dashname = document.getElementById("dashboardname").value
       var dateTime = this.dob
       if (!dashname){
+        this.showerror =true
+        this.error_message = "Please enter dashboard name"
         return
       }
       if (!dateTime){
@@ -92,6 +94,12 @@ export default {
       .catch(error => {
           console.log(error);
       });
+    },
+    validateName(){
+       var dashname = document.getElementById("dashboardname").value
+       if (dashname){
+         this.showerror = false
+       }
     },
     createMarkerObject(marker_data, blue_icon) {
       let marker = L.marker(
