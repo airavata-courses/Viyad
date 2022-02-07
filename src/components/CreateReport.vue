@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-bind:class="{ disabled: loading }">
     <div class = "input">
        <label for="dashboardname">Dashboard Name: &nbsp;</label>
        <input type="text" id="dashboardname" name="dashboardname" @change = "validateName">
@@ -13,6 +13,7 @@
     <div class = "footer" >
         <input type="submit" class= "button" value = "Save" @click = "saveDashboard">
     </div>
+  <Loader :loading = "loading"/>
   </div>
 </template>
 
@@ -25,10 +26,16 @@ import markerIconPNG from "leaflet/dist/images/marker-icon.png";
 import "proj4leaflet";
 import proj4 from "proj4";
 import datetime from 'vuejs-datetimepicker';
+import Loader from "./Loader"
 
 export default {
   name: "CreateReport",
-  components: {datetime},
+  components: {datetime,Loader},
+  props: {
+    dname: String,
+    loc: String,
+    ddate: String
+  },
   data() {
     let greenIcon;
     let blueIcon;
@@ -43,7 +50,9 @@ export default {
       markerLatLng: [39.163896, -86.525816],
       marker_data_show: marker_data_show,
       error_message: "",
-      showerror : false
+      showerror : false,
+      dob : null,
+      loading:false
     };
   },
   methods: {
@@ -63,12 +72,16 @@ export default {
        }
        var payload = { "name": dashname,"userId": 1,"date": dateTime,"location": "KAEC"};
        var payload_stringify = JSON.stringify(payload)
+       this.loading = true
        axios.post('http://127.0.0.1:5000/addpersistence', payload_stringify,{headers: {
            'content-type': 'application/json'
          }
        })
-       .then(response => console.log(response))
+       .then((response )=>{ 
+         this.loading = false
+        })
        .catch(error => {
+           this.loading = false
            console.log(error);
        });
      },
@@ -94,7 +107,20 @@ export default {
       console.log(evt.sourceTarget._leaflet_id);
     },
   },
+  created(){ 
+    if (this.ddate){
+      this.dob = this.ddate
+    }
+    if(this.loc){
+      console.log(this.loc)
+    }
+
+  },
   mounted() {
+    if (this.dname){
+      document.getElementById("dashboardname").value = this.dname
+    }
+
     let marker_list = {};
     let previously_clicked = {};
     this.blueIcon = new Icon({
@@ -121,7 +147,9 @@ export default {
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.map);
     let _this = this;
+    this.loading = true
     axios.get("http://localhost:8000/api/radars").then((response) => {
+      this.loading = false
       for (let key in response.data) {
         let marker = this.createMarkerObject(
           {
@@ -154,12 +182,14 @@ export default {
           let _thisRef = _this
           marker.marker_.unbindPopup()
           marker.marker_.bindPopup()
+          this.loading = true
           axios
             .post("http://localhost:8000/api/radars", {
               radarId: evt.sourceTarget._leaflet_id,
               time: new Date().toString(),
             })
             .then((response) => {
+              this.loading = false
               debugger;
               const src = "data:image/png;base64," + response.data;
               const popupContent = document.createElement("div");
@@ -170,13 +200,18 @@ export default {
               marker.marker_.bindPopup(popupContent, { width: "250px", height: "250px" })
               marker.marker_.update()
               marker.marker_.openPopup()
-            });
+            })
+            .catch((error)=>{
+              this.loading = false
+            })
           previously_clicked["marker"] = marker.marker_;
           marker.marker_.setIcon(_this.greenIcon);
           _this.user_clicked(evt);
         });
       }
-    });
+    }).catch((error)=>{
+      this.loading = false
+    })
   },
 };
 </script>
@@ -213,4 +248,8 @@ export default {
  .error{
    color:red;
  }
+ .disabled{
+  pointer-events: none;
+  user-select: none;
+}
 </style>
