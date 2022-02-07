@@ -1,9 +1,10 @@
 # Viyad
 Spring 2022 Project
 
-# Gateway Service
+# API- Gateway
 
 ## Purpose
+ 
 
 ## How it works
 
