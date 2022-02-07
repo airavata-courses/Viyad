@@ -29,8 +29,7 @@ class RadarInfoViewSet(viewsets.ViewSet):
     def getData(self, request): # /api/radar
         # a = json.load(request)
         radar_station = request.data["radarId"]
-        print(datetime)
-        time = datetime.utcnow()
+        time = datetime.strptime(request.data['time'], '%Y-%m-%d %H:%M:%S')
         rs = RadarServer('http://tds-nexrad.scigw.unidata.ucar.edu/thredds/radarServer/nexrad/level2/S3/')
         query = rs.query()
         query.stations(radar_station).time(time)
@@ -38,7 +37,6 @@ class RadarInfoViewSet(viewsets.ViewSet):
         catalog.datasets
         if(len(catalog.datasets)):
             data = catalog.datasets[0].remote_access()
-            print(rs)
             def raw_to_masked_float(var, data):
                 # Values come back signed. If the _Unsigned attribute is set, we need to convert
                 # from the range [-127, 128] to [0, 255].
