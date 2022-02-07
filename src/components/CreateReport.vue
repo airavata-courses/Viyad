@@ -1,18 +1,26 @@
 <template>
   <div class="container" v-bind:class="{ disabled: loading }">
-    <div class="input">
-      <label for="dashboardname">Dashboard Name: &nbsp;</label>
-      <input
-        type="text"
-        id="dashboardname"
-        name="dashboardname"
-        @change="validateName"
-      />
-      <div class="datetime">
-        <label for="dtp">Please select date below:</label>
-        <datetime format="YYYY-MM-DD H:i:s" v-model="dob" id="dtp"></datetime>
-      </div>
-      <label v-if="showerror" class="error">{{ error_message }}</label>
+    <div style="height: 50px; background-color: rgba(137, 196, 244);, 1;">
+      <ul class="nav justify-content-end">
+        <li class="nav-item">
+          <router-link class="nav-link" to="/myreports">My Reports</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/create">Create Report</router-link>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Sign Out</a>
+        </li>
+      </ul>
+    </div>  
+    <div class = "input">
+       <label for="dashboardname">Dashboard Name: &nbsp;</label>
+       <input type="text" id="dashboardname" name="dashboardname" @change = "validateName">
+       <div class = "datetime">
+         <label for = "dtp">Please select date below:</label>
+         <datetime format="YYYY-MM-DD H:i:s" v-model='dob' id= "dtp"></datetime>
+       </div>
+       <label v-if= "showerror" class= "error">{{error_message}}</label>
     </div>
     <div class="map container" id="map"></div>
     <div class="footer">
