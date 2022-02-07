@@ -11,31 +11,6 @@ def test():
     resp = jsonify(messsage)
     resp.status_code = 200
     return resp    
-
-
-
-@app.route('/test', methods=['POST'])
-def tests():
-    try:
-        _json = request.json
-        _name = _json['name']
-        _date = _json['date']
-        _location = _json['location']
-        # save edits
-        sql = "INSERT INTO pers_test(pers_name,pers_location) VALUES(%s, %s)"
-        data = (_name,_location,)
-        conn = mysql.connect()
-        cursor = conn.cursor()
-        cursor.execute(sql,data)
-        conn.commit()
-        resp = jsonify('Persistence added successfully!')
-        resp.status_code = 200
-        return resp
-    except Exception as e:
-        print(e)
-    finally:
-        cursor.close() 
-        conn.close()
     
 
 @app.route('/addpersistence', methods=['POST'])
@@ -43,17 +18,14 @@ def add_persistence():
     try:
         _json = request.json
         _name = _json['name']
+        _userid = _json['userId']
         _date = _json['date']
-        _location = _json['location']
-        if not _date:
-            _date = datetime.now()
-            _date = _date.strftime('%Y-%m-%d %H:%M:%S')
-            
+        _location = _json['location']            
         # validate the received values
         if _name  and _location and request.method == 'POST':
             # save edits
-            sql = "INSERT INTO pers_test(pers_name, pers_date, pers_location) VALUES(%s, %s, %s)"
-            data = (_name, _date, _location,)
+            sql = "INSERT INTO pers_test(pers_name,user_id, pers_date, pers_location) VALUES(%s, %s, %s, %s)"
+            data = (_name,_userid, _date, _location,)
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.execute(sql, data)
@@ -70,12 +42,12 @@ def add_persistence():
         conn.close()
   
 		
-@app.route('/persistences')
-def get_all_persistences():
+@app.route('/persistences/<int:userId>')
+def get_all_persistences(userId):
 	try:
 		conn = mysql.connect()
 		cursor = conn.cursor(pymysql.cursors.DictCursor)
-		cursor.execute("SELECT * FROM pers_test")
+		cursor.execute("SELECT * FROM pers_test where user_id =%s order by updated_time desc",userId)
 		rows = cursor.fetchall()
 		resp = jsonify(rows)
 		resp.status_code = 200
@@ -110,9 +82,6 @@ def update_persistence():
         _name = _json['name']
         _date = _json['date']
         _location = _json['location']
-        if not _date:
-            _date = datetime.now()
-            _date = _date.strftime('%Y-%m-%d %H:%M:%S')		
         # validate the received values
         if _name and _location and _id and request.method == 'POST':
             #do not save password as a plain text
