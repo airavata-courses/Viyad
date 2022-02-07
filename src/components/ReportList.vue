@@ -11,10 +11,10 @@
         </thead>
         <tbody>
           <tr v-for="(item, i) in report_info" v-bind:key="i">
-            <th scope="row">{{ item.id }}</th>
+            <th scope="row">{{ item.pers_id }}</th>
             <th>
               <a style="color: #000000" href="#">
-                {{ item.report_name }}
+                {{ item.pers_name }}
               </a>
             </th>
             <th>
