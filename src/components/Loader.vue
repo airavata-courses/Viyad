@@ -22,7 +22,7 @@ export default {
   width: 36px;
   height: 36px;
   animation: spin 2s linear infinite;
-  margin: 12% auto;
+  margin: 45% auto;
   z-index: 1000;
 }
 
