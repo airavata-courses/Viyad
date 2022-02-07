@@ -23,10 +23,10 @@
        <label v-if= "showerror" class= "error">{{error_message}}</label>
     </div>
     <div class="map container" id="map"></div>
-    <div class = "footer" >
-        <input type="submit" class= "button" value = "Save" @click = "saveDashboard">
+    <div class="footer">
+      <input type="submit" class="button" value="Save" @click="saveDashboard" />
     </div>
-  <Loader :loading = "loading"/>
+    <Loader :loading="loading" />
   </div>
 </template>
 
@@ -38,21 +38,33 @@ import axios from "axios";
 import markerIconPNG from "leaflet/dist/images/marker-icon.png";
 import "proj4leaflet";
 import proj4 from "proj4";
-import datetime from 'vuejs-datetimepicker';
-import Loader from "./Loader"
+import datetime from "vuejs-datetimepicker";
+import Loader from "./Loader";
 
 export default {
   name: "CreateReport",
-  components: {datetime,Loader},
+  components: { datetime, Loader },
   props: {
     dname: String,
     loc: String,
-    ddate: String
+    ddate: String,
   },
   data() {
     let greenIcon;
     let blueIcon;
     let marker_data_show = [];
+    let radarCity = {};
+    var today = new Date();
+    var date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    var time =
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date + " " + time;
+    //this.ddate = datetime;
     return {
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
@@ -63,47 +75,64 @@ export default {
       markerLatLng: [39.163896, -86.525816],
       marker_data_show: marker_data_show,
       error_message: "",
-      showerror : false,
-      dob : null,
-      loading:false
+      showerror: false,
+      dob: dateTime,
+      loading: false,
     };
   },
   methods: {
-     saveDashboard(){
-       var dashname = document.getElementById("dashboardname").value
-       var dateTime = this.dob
-       if (!dashname){
-         this.showerror =true
-         this.error_message = "Please enter dashboard name"
-         return
-       }
-       if (!dateTime){
-         var today = new Date();
-         var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-         var dateTime = date +' '+time;
-       }
-       var payload = { "name": dashname,"userId": 1,"date": dateTime,"location": "KAEC"};
-       var payload_stringify = JSON.stringify(payload)
-       this.loading = true
-       axios.post('http://127.0.0.1:5000/addpersistence', payload_stringify,{headers: {
-           'content-type': 'application/json'
-         }
-       })
-       .then((response )=>{ 
-         this.loading = false
+    saveDashboard() {
+      var dashname = document.getElementById("dashboardname").value;
+      var dateTime = this.dob;
+      if (!dashname) {
+        this.showerror = true;
+        this.error_message = "Please enter dashboard name";
+        return;
+      }
+      if (!dateTime) {
+        var today = new Date();
+        var date =
+          today.getFullYear() +
+          "-" +
+          (today.getMonth() + 1) +
+          "-" +
+          today.getDate();
+        var time =
+          today.getHours() +
+          ":" +
+          today.getMinutes() +
+          ":" +
+          today.getSeconds();
+        var dateTime = date + " " + time;
+      }
+      var payload = {
+        name: dashname,
+        userId: 1,
+        date: dateTime,
+        location: "KAEC",
+      };
+      var payload_stringify = JSON.stringify(payload);
+      this.loading = true;
+      axios
+        .post("http://127.0.0.1:5000/addpersistence", payload_stringify, {
+          headers: {
+            "content-type": "application/json",
+          },
         })
-       .catch(error => {
-           this.loading = false
-           console.log(error);
-       });
-     },
-     validateName(){
-        var dashname = document.getElementById("dashboardname").value
-        if (dashname){
-          this.showerror = false
-        }
-     },
+        .then((response) => {
+          this.loading = false;
+        })
+        .catch((error) => {
+          this.loading = false;
+          console.log(error);
+        });
+    },
+    validateName() {
+      var dashname = document.getElementById("dashboardname").value;
+      if (dashname) {
+        this.showerror = false;
+      }
+    },
     createMarkerObject(marker_data, blue_icon) {
       let marker = L.marker(
         [marker_data.radar_location[0], marker_data.radar_location[1]],
@@ -120,21 +149,21 @@ export default {
       console.log(evt.sourceTarget._leaflet_id);
     },
   },
-  created(){ 
-    if (this.ddate){
-      this.dob = this.ddate
+  created() {
+    if (this.ddate) {
+      this.dob = this.ddate;
     }
-    if(this.loc){
-      console.log(this.loc)
+    if (this.loc) {
+      console.log(this.loc);
     }
-
   },
   mounted() {
-    if (this.dname){
-      document.getElementById("dashboardname").value = this.dname
+    if (this.dname) {
+      document.getElementById("dashboardname").value = this.dname;
     }
 
     let marker_list = {};
+    this.radarCity = {};
     let previously_clicked = {};
     this.blueIcon = new Icon({
       iconUrl: markerIconPNG,
@@ -160,108 +189,142 @@ export default {
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.map);
     let _this = this;
-    this.loading = true
-    axios.get("http://localhost:8000/api/radars").then((response) => {
-      this.loading = false
-      for (let key in response.data) {
-        let marker = this.createMarkerObject(
-          {
-            radar_location: [response.data[key][2], response.data[key][3]],
-            name: response.data[key][4],
-          },
-          _this.blueIcon
-        );
-        marker.marker_ = marker.marker_.addTo(this.map);
-        marker.marker_._leaflet_id = key;
-        marker.marker_.bindPopup(marker.marker_popup);
-        marker_list[key] = marker.marker_;
-        // marker.marker_.on("mouseover", function (evt) {
-        //   this.openPopup();
-        // });
-        // marker.marker_.on("mouseout", function (evt) {
-        //   this.closePopup();
-        // });
-        marker.marker_.on("click", function (evt) {
-          if (previously_clicked.hasOwnProperty("marker")) {
-            previously_clicked["marker"].setIcon(_this.blueIcon);
-            if (
-              evt.sourceTarget._leaflet_id ==
-              previously_clicked["marker"]._leaflet_id
-            ) {
-              delete previously_clicked["marker"];
-              return;
-            }
+    this.loading = true;
+    axios
+      .get("http://localhost:8000/api/radars")
+      .then((response) => {
+        this.loading = false;
+        for (let key in response.data) {
+          let marker = this.createMarkerObject(
+            {
+              radar_location: [response.data[key][2], response.data[key][3]],
+              name: response.data[key][4],
+            },
+            _this.blueIcon
+          );
+          this.radarCity[response.data[key][0]] = response.data[key][4];
+          marker.marker_ = marker.marker_.addTo(this.map);
+          marker.marker_._leaflet_id = key;
+          if (key == _this.loc) {
+            marker.marker_.setIcon(_this.greenIcon);
+            this.loading = true;
+            axios
+              .post("http://localhost:8000/api/radars", {
+                radarId: key,
+                time: _this.dob,
+              })
+              .then((response) => {
+                this.loading = false;
+                const src = "data:image/png;base64," + response.data;
+                const popupContent = document.createElement("div");
+                popupContent.innerHTML =
+                  "<img style='width: 250px; height: 250px;' src='" +
+                  src +
+                  "' >";
+                marker.marker_.bindPopup(popupContent, {
+                  width: "250px",
+                  height: "250px",
+                });
+                marker.marker_.update();
+                marker.marker_.openPopup();
+              })
+              .catch((error) => {
+                this.loading = false;
+              });
+          } else {
+            marker.marker_.bindPopup(marker.marker_popup);
           }
-          let _thisRef = _this
-          marker.marker_.unbindPopup()
-          marker.marker_.bindPopup()
-          this.loading = true
-          axios
-            .post("http://localhost:8000/api/radars", {
-              radarId: evt.sourceTarget._leaflet_id,
-              time: new Date().toString(),
-            })
-            .then((response) => {
-              this.loading = false
-              debugger;
-              const src = "data:image/png;base64," + response.data;
-              const popupContent = document.createElement("div");
-              popupContent.innerHTML = "<img style='width: 250px; height: 250px;' src='" + src + "' >";
-              // const marker = L.marker([marker.marker_._latlng.lat, marker.marker_._latlng.lng])
-              //   .bindPopup(popupContent, { maxWidth: "auto" })
-              //   .addTo(_this.map);
-              marker.marker_.bindPopup(popupContent, { width: "250px", height: "250px" })
-              marker.marker_.update()
-              marker.marker_.openPopup()
-            })
-            .catch((error)=>{
-              this.loading = false
-            })
-          previously_clicked["marker"] = marker.marker_;
-          marker.marker_.setIcon(_this.greenIcon);
-          _this.user_clicked(evt);
-        });
-      }
-    }).catch((error)=>{
-      this.loading = false
-    })
+          marker_list[key] = marker.marker_;
+          // marker.marker_.on("mouseover", function (evt) {
+          //   this.openPopup();
+          // });
+          // marker.marker_.on("mouseout", function (evt) {
+          //   this.closePopup();
+          // });
+          marker.marker_.on("click", function (evt) {
+            if (previously_clicked.hasOwnProperty("marker")) {
+              previously_clicked["marker"].setIcon(_this.blueIcon);
+              if (
+                evt.sourceTarget._leaflet_id ==
+                previously_clicked["marker"]._leaflet_id
+              ) {
+                delete previously_clicked["marker"];
+                return;
+              }
+            }
+            let _thisRef = _this;
+            marker.marker_.unbindPopup();
+            marker.marker_.bindPopup();
+            this.loading = true;
+            axios
+              .post("http://localhost:8000/api/radars", {
+                radarId: evt.sourceTarget._leaflet_id,
+                time: _this.dob,
+              })
+              .then((response) => {
+                this.loading = false;
+                const src = "data:image/png;base64," + response.data;
+                const popupContent = document.createElement("div");
+                popupContent.innerHTML =
+                  "<img style='width: 250px; height: 250px;' src='" +
+                  src +
+                  "' >";
+                marker.marker_.bindPopup(popupContent, {
+                  width: "250px",
+                  height: "250px",
+                });
+                marker.marker_.update();
+                marker.marker_.openPopup();
+              })
+              .catch((error) => {
+                this.loading = false;
+              });
+            previously_clicked["marker"] = marker.marker_;
+            marker.marker_.setIcon(_this.greenIcon);
+            _this.user_clicked(evt);
+          });
+        }
+      })
+      .catch((error) => {
+        this.loading = false;
+      });
   },
 };
 </script>
 
 <style>
-.input{
-   position: absolute;
- }
+.input {
+  position: absolute;
+}
 .map {
   position: absolute;
   width: 80% !important;
   height: 50% !important;
   margin-top: 10% !important;
   overflow: hidden;
-  z-index:1;
+  z-index: 1;
 }
-.footer{
-   position: absolute;
-   width: 80% !important;
-   margin-top:40% !important;
- }
- .button {
-   display: block;
-   width: 20%;
-   border: none;
-   background-color: rgb(137, 196, 244);
-   color: white;
-   padding: 14px 28px;
-   font-size: 16px;
-   cursor: pointer;
-   text-align: center;
-   margin-left : 80%;
- }
- .error{
-   color:red;
- }
- .disabled{
+.footer {
+  position: absolute;
+  width: 80% !important;
+  margin-top: 40% !important;
+}
+.button {
+  display: block;
+  width: 20%;
+  border: none;
+  background-color: rgb(137, 196, 244);
+  color: white;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  margin-left: 80%;
+}
+.error {
+  color: red;
+}
+.disabled {
   pointer-events: none;
   user-select: none;
 }
