@@ -8,6 +8,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(router)
 
-console.log("API Gateway on localhost:3000")
+console.log("API Gateway on localhost:3006")
 
-app.listen(3000);
+app.listen(3006);
