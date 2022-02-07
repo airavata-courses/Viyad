@@ -13,7 +13,7 @@
           <tr v-for="(item, i) in report_info" v-bind:key="i">
             <th scope="row">{{ item.pers_id }}</th>
             <th>
-              <a style="color: #000000" href="#">
+              <a style="color: #000000" href="#" @click="redirectToReports(item.pers_id)">
                 {{ item.pers_name }}
               </a>
             </th>
@@ -21,7 +21,7 @@
               <a
                 style="color: #000000"
                 href="#"
-                v-on:click.stop.prevent="clicked(item.id)"
+                v-on:click.stop.prevent="clicked(item.pers_id)"
               >
                 <font-awesome-icon icon="trash" />
               </a>
@@ -38,12 +38,14 @@
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import Modal from './Modal.vue';
+import CreateReport from './CreateReport.vue'
 
 export default {
   name: "ReportList",
   data(){
     return{
       isModalVisible: false,
+      redirect_to_reports: false
     }
   },
   props: ["report_info"],
@@ -61,7 +63,19 @@ export default {
     },
     closeModal(){
       this.isModalVisible = false
+    },
+    redirectToReports(pers_id){
+      var selected_pers = this.report_info.filter(function(report){
+        return report.pers_id == pers_id
+      })
+      var ddate = new Date(selected_pers[0].pers_date).toISOString()
+      var date_Split = ddate.split("T")
+      var time_split = date_Split[1].split(".")[0]
+      var date_Sent = date_Split[0] + " " + time_split
+
+      this.$router.push({ name: 'Create', params: {dname: selected_pers[0].pers_name,loc: selected_pers[0].pers_location,ddate : date_Sent }})
     }
+
   }
 };
 </script>

@@ -9,7 +9,8 @@ const routes = [
   {
     path: '/create',
     name: 'Create',
-    component: CreateReport
+    component: CreateReport,
+    props: true
   },
   {
     path: '/',
