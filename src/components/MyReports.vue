@@ -1,5 +1,18 @@
 <template>
     <div v-bind:class="{ disabled: loading }">
+      <div style="height: 50px; background-color: rgba(137, 196, 244);, 1;">
+        <ul class="nav justify-content-end">
+          <li class="nav-item">
+            <router-link class="nav-link" to="/myreports">My Reports</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/create">Create Report</router-link>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Sign Out</a>
+          </li>
+        </ul>
+      </div>
         <div class="d-flex p-2 text-uppercase">
             <h2 class="h-100 row align-items-center">My Report</h2>
         </div>
