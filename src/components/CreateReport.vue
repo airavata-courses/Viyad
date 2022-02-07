@@ -1,6 +1,18 @@
 <template>
   <div class="container">
-    <div class="map container" id="map"></div>
+    <div class = "input">
+      <label for="dashboardname">Dashboard Name: &nbsp;</label>
+      <input type="text" id="dashboardname" name="dashboardname" required>
+      <div class = "datetime">
+        <label for = "dtp">Please select date below:</label>
+        <datetime format="YYYY-MM-DD H:i:s" v-model='dob' id= "dtp"></datetime>
+      </div>
+      <label v-if= "showerror" class= "error">{{error_message}}</label>
+   </div>
+   <div class="map container" id="map"></div>
+   <div class = "footer" >
+       <input type="submit" class= "button" value = "Save" @click = "saveDashboard">
+   </div>
   </div>
 </template>
 
@@ -12,11 +24,14 @@ import axios from "axios";
 import markerIconPNG from "leaflet/dist/images/marker-icon.png";
 import "proj4leaflet";
 import proj4 from "proj4";
+import datetime from 'vuejs-datetimepicker';
 
 export default {
   name: "CreateReport",
-  components: {},
+  components: {datetime},
   data() {
+    this.error_message = "Hi"
+    this.showerror = false
     let greenIcon;
     let blueIcon;
     // let marker_data = []
@@ -55,6 +70,29 @@ export default {
     };
   },
   methods: {
+    saveDashboard(){
+      var dashname = document.getElementById("dashboardname").value
+      var dateTime = this.dob
+      if (!dashname){
+        return
+      }
+      if (!dateTime){
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date +' '+time;
+      }
+      var payload = { "name": dashname,"userId": 1,"date": dateTime,"location": "KAEC"};
+      var payload_stringify = JSON.stringify(payload)
+      axios.post('http://127.0.0.1:5000/addpersistence', payload_stringify,{headers: {
+          'content-type': 'application/json'
+        }
+      })
+      .then(response => console.log(response))
+      .catch(error => {
+          console.log(error);
+      });
+    },
     createMarkerObject(marker_data, blue_icon) {
       let marker = L.marker(
         [marker_data.radar_location[0], marker_data.radar_location[1]],
@@ -191,11 +229,35 @@ export default {
 </script>
 
 <style>
+.input{
+  position: absolute;
+}
 .map {
   position: absolute;
-  width: 88% !important;
-  height: 75% !important;
-  margin-top: 77px !important;
+  width: 80% !important;
+  height: 50% !important;
+  margin-top: 10% !important;
   overflow: hidden;
+  z-index:1;
+}
+.footer{
+  position: absolute;
+  width: 80% !important;
+  margin-top:40% !important;
+}
+.button {
+  display: block;
+  width: 20%;
+  border: none;
+  background-color: rgb(137, 196, 244);
+  color: white;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  margin-left : 80%;
+}
+.error{
+  color:red;
 }
 </style>

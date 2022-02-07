@@ -25,7 +25,8 @@
     "vue": "^2.6.11",
     "vue-faker": "^3.0.0",
     "vue-router": "^3.5.3",
-    "vue2-leaflet": "^2.7.1"
+    "vue2-leaflet": "^2.7.1",
+    "vuejs-datetimepicker": "^1.1.13"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
