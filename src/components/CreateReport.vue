@@ -48,6 +48,7 @@ export default {
     dname: String,
     loc: String,
     ddate: String,
+    userId: Number
   },
   data() {
     let greenIcon;
@@ -78,6 +79,7 @@ export default {
       showerror: false,
       dob: dateTime,
       loading: false,
+      location:this.loc
     };
   },
   methods: {
@@ -105,11 +107,17 @@ export default {
           today.getSeconds();
         var dateTime = date + " " + time;
       }
+      if(!this.userId){
+        this.userId = localStorage.getItem('userId');
+      }
+      if(!this.userId){
+        this.userId = 0
+      }      
       var payload = {
         name: dashname,
-        userId: 1,
+        userId: this.userId,
         date: dateTime,
-        location: "KAEC",
+        location: this.location,
       };
       var payload_stringify = JSON.stringify(payload);
       this.loading = true;
@@ -262,6 +270,7 @@ export default {
                 time: _this.dob,
               })
               .then((response) => {
+                this.location = evt.sourceTarget._leaflet_id
                 this.loading = false;
                 const src = "data:image/png;base64," + response.data;
                 const popupContent = document.createElement("div");

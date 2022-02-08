@@ -13,30 +13,77 @@
         <form>
             <h3>Sign Up</h3>
             <div class="form-group">
-                <label>Email address</label>
-                <input type="email" class="form-control form-control-lg" />
+                <label>User Name</label>
+                <input type="text" class="form-control form-control-lg" id="uname"/>
             </div>
  
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" class="form-control form-control-lg" />
+                <input type="password" class="form-control form-control-lg" id = "password"/>
             </div>
  
-            <button type="submit" class="btn btn-dark btn-lg btn-block">Sign Up</button>
+            <button type="submit" class="btn btn-dark btn-lg btn-block" @click="signUp">Sign Up</button>
  
             <p class="forgot-password text-right">
                 Already registered 
                 <router-link :to="{name: 'Login'}">sign in?</router-link>
             </p>
         </form>
+        <label v-if= "showError" class= "error">{{error_message}}</label>
     </div>
 </template>
  
 <script>
+import axios from "axios";
     export default {
         name: "Registration",
         data() {
-            return {}
+            return {
+                showError: false
+            }
+        },
+        methods:{
+            signUp(){
+                var usrname = document.getElementById("uname").value
+                var password = document.getElementById("password").value
+                if (!usrname && !password){
+                    this.showError = true
+                    this.error_message = "Please enter username and password"
+                    return  
+
+                }else if (!password){
+                    this.showError = true
+                    this.error_message = "Please enter password"
+                    return  
+                }else if(!usrname){
+                    this.showError = true
+                    this.error_message = "Please enter username"
+                    return  
+                }else{
+                    this.showError = false
+                    this.error_message = ""
+                }
+                var payload = {
+                    username: usrname,
+                    password: password,
+                    role: "USER"
+                };
+                var payload_stringify = JSON.stringify(payload);
+                axios
+                    .post("http://127.0.0.1:3006/api/register", payload_stringify, {
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                    })
+                    .then((response) => {
+                        this.$router.push({ name: 'Login'})                        
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        this.showError = true
+                        this.error_message = "User was not registered successfully"
+                    });                                   
+            }
         }
     }
 </script>
