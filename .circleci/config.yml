@@ -6,26 +6,10 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  test-persistence:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+  build:
+    machine: true
     steps:
-      - checkout
-      - run:
-          name: Start container and verify it's working
-          command: |
-            set -x
-            docker-compose up -d
-            docker run --network container:app \
-              appropriate/curl --retry 10 --retry-delay 1 --retry-connrefused http://localhost:5000/      
-
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
-workflows:
-  test-persistence-workflow:
-    jobs:
-      - test-persistence
+        - checkout
+        - run: docker-compose up -d
+        - run: docker run --network container:contacts \
+        - run: appropriate/curl --retry 10 --retry-delay 1 --retry-connrefused http://localhost:5000/
