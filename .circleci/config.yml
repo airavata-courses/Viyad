@@ -6,10 +6,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Python
-          command: |
-            sudo apt-get update && apt-get install -y python3-pip
-      - run:
           name: Install Packages
           command: |
             sudo apt install python3-dev libproj-dev proj-data proj-bin libgeos-dev -y
