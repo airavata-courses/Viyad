@@ -23,4 +23,10 @@ router.post('/api/register', (req, res) => {
     })
 })
 
+router.post('/api/login', (req, res) => {
+    api.post(req.path, req.body).then(resp => {
+        res.send(resp.data)
+    })
+})
+
 module.exports = router
