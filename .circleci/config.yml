@@ -12,4 +12,5 @@ jobs:
         - checkout
         - run: docker-compose up -d
         - run: docker run --network container:contacts \
-        - run: appropriate/curl --retry 10 --retry-delay 1 --retry-connrefused http://localhost:5000/
+        - run: >-
+            curl -X GET 
