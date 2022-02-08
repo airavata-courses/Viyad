@@ -11,6 +11,5 @@ jobs:
     steps:
         - checkout
         - run: docker-compose up -d
-        - run: docker run --network container:contacts \
         - run: >-
             curl -X GET 
