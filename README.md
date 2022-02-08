@@ -24,8 +24,9 @@ Node
 ### Execution Steps
 1. execute git clone https://github.com/airavata-courses/Viyad.git
 2. go to Viyad folder
-3. execute npm install
-4. execute node index.js
+3. go to api-gateway folder
+4. execute npm install
+5. execute node index.js
 
 
 ## Implementation
