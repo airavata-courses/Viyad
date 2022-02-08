@@ -45,7 +45,7 @@ Saiprasad Omprakash Rane
 
 Renuka Srishti
 
-## Diagram to show docker conatiner work flow
+## Diagram to show docker container work flow
 Login Auth application and database connection flow
 
 
