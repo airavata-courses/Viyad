@@ -55,6 +55,7 @@ export default {
     let blueIcon;
     let marker_data_show = [];
     let radarCity = {};
+    let location = ''
     var today = new Date();
     var date =
       today.getFullYear() +
@@ -111,18 +112,18 @@ export default {
         this.userId = localStorage.getItem('userId');
       }
       if(!this.userId){
-        this.userId = 0
+        this.userId = 1
       }      
       var payload = {
         name: dashname,
-        userId: this.userId,
+        userId: 1,
         date: dateTime,
         location: this.location,
       };
       var payload_stringify = JSON.stringify(payload);
       this.loading = true;
       axios
-        .post("http://127.0.0.1:5000/addpersistence", payload_stringify, {
+        .post("http://127.0.0.1:3006/addpersistence", payload_stringify, {
           headers: {
             "content-type": "application/json",
           },
@@ -172,6 +173,7 @@ export default {
 
     let marker_list = {};
     this.radarCity = {};
+    this.location = this.loc
     let previously_clicked = {};
     this.blueIcon = new Icon({
       iconUrl: markerIconPNG,
@@ -199,7 +201,7 @@ export default {
     let _this = this;
     this.loading = true;
     axios
-      .get("http://localhost:8000/api/radars")
+      .get("http://localhost:3006/api/radars")
       .then((response) => {
         this.loading = false;
         for (let key in response.data) {
@@ -217,7 +219,7 @@ export default {
             marker.marker_.setIcon(_this.greenIcon);
             this.loading = true;
             axios
-              .post("http://localhost:8000/api/radars", {
+              .post("http://localhost:3006/api/radars", {
                 radarId: key,
                 time: _this.dob,
               })
@@ -265,12 +267,12 @@ export default {
             marker.marker_.bindPopup();
             this.loading = true;
             axios
-              .post("http://localhost:8000/api/radars", {
+              .post("http://localhost:3006/api/radars", {
                 radarId: evt.sourceTarget._leaflet_id,
                 time: _this.dob,
               })
               .then((response) => {
-                this.location = evt.sourceTarget._leaflet_id
+                _this.location = evt.sourceTarget._leaflet_id
                 this.loading = false;
                 const src = "data:image/png;base64," + response.data;
                 const popupContent = document.createElement("div");

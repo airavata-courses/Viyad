@@ -46,7 +46,10 @@ export default {
     if(!this.userId){
       this.userId = localStorage.getItem('userId');
     }
-    var url = "http://127.0.0.1:5000/persistences/" + this.userId
+    if(!this.userId){
+      this.userId = 1
+    }  
+    var url = "http://127.0.0.1:3006/persistences/" + 1
     this.loading = true
     axios.get(url).then((response) => {
       this.report_info = response.data;
