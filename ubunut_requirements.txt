@@ -1,0 +1,4 @@
+libproj-dev==1.0
+proj-data==1.0
+proj-bin==1.0
+libgeos-dev==1.0
