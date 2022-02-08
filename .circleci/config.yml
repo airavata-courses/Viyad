@@ -2,9 +2,19 @@ version: 2.1
 jobs:
   run_tests:
     docker:
-      - image: circleci/python:3.7.4
+      - image: circleci/ubuntu:latest
     steps:
       - checkout
+      - run:
+          name: Install Python
+          command: |
+            apt-get update && apt-get install -y
+            python3.8
+            python3-pip
+      - run:
+          name: Install Packages
+          command: |
+            apt install python3-dev libproj-dev proj-data proj-bin libgeos-dev -y
       - run:
           name: Install Python Dependencies
           command: |
