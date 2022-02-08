@@ -12,4 +12,4 @@ jobs:
         - checkout
         - run: docker-compose up -d
         - run: >-
-            curl -X GET 
+             curl -X GET http://127.0.0.1:5000/persistences/1
