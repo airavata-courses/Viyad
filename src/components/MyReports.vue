@@ -6,7 +6,7 @@
             <router-link class="nav-link" to="/myreports">My Reports</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/create">Create Report</router-link>
+            <router-link class="nav-link" :to="{name: 'Create',params: {userId:userId}}">Create Report</router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Sign Out</a>
@@ -27,6 +27,9 @@ import ReportList from  "./ReportList"
 import Loader from "./Loader"
 export default {
   name: "MainApp",
+  props:{
+    userId: Number
+  },
   data: function () {
     let report_info = [];
     return {
@@ -40,8 +43,12 @@ export default {
     Loader
   },
   mounted() {
+    if(!this.userId){
+      this.userId = localStorage.getItem('userId');
+    }
+    var url = "http://127.0.0.1:5000/persistences/" + this.userId
     this.loading = true
-    axios.get("http://127.0.0.1:5000/persistences/1").then((response) => {
+    axios.get(url).then((response) => {
       this.report_info = response.data;
       this.loading = false
     }).catch((error)=>{
