@@ -36,6 +36,12 @@ open -na Google\ Chrome --args --user-data-dir=/tmp/temporary-chrome-profile-dir
 
 2. Linux
 
+pkill chrome
+
+/usr/bin/google-chrome-stable --disable-web-security --user-data-dir=/home/jossnaz/.config/google-chrome/
+
+
+
 
 Now copy paste the URL in the chrome instance
 
@@ -43,20 +49,25 @@ Now copy paste the URL in the chrome instance
 Node
 Vuejs
 
-### Execution Steps
-
-
-## Implementation
-
-
-
 ### Current status
+
+Currently, user can login and register successfully.
 
 
 ### Future plans
+After successful login and resgiter, url is not redirecting to report page. But functionality is working fine.
+Right now you have to go to links manually:
+http://localhost:portnumber/create
+for example:
+http://localhost:8080/create
 
 
 ## Testing
+User can view report.
+User can successfully login.
+User can generate report.
+User can save report.
+Visualization is also working fine.
 
 
 ## Team
