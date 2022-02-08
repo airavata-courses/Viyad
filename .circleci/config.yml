@@ -16,7 +16,7 @@ jobs:
       - checkout
       - run:
           name: "Build"
-          command: "Build Successfully!"
+          command: "echo Build Successfully!"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
