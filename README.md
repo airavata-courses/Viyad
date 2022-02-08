@@ -30,13 +30,20 @@ Docker Application. The [Docker Installation Official Guide](https://docs.docker
 ## Implementation
 
 ### Current status
+User can register by providing username and password.
 
 ### Future plans
+We have implemented JWT token as well. In future we will use to authorize this token for all other microservices.
 
 ## Testing
+User can register and login
 
 ## Team
+Vignesh Reddy
 
+Saiprasad Omprakash Rane
+
+Renuka Srishti
 
 
 ![Postgrey_Spring_Boot_Application_Container_Connection](https://user-images.githubusercontent.com/23609304/152628923-1b124cb3-8268-4875-90e8-dcab6770619d.jpg)
