@@ -17,7 +17,8 @@ User will login and register by providing username and password.
 
 1. run git clone https://github.com/airavata-courses/Viyad.git
 2. go to Viyad folder
-3. run docker-compose up
+3. go to auth folder
+4. run docker-compose up
 
 ### Prerequisites
 
