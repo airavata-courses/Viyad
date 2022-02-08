@@ -9,7 +9,7 @@ services:
     - 5432:5432
     environment:
     - POSTGRES_PASSWORD=root
-    - POSTGRES_DB=testdb
+    - POSTGRES_DB=userloginauthdb
     networks:
     - postgres_spring
   docker-auth-app:
