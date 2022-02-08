@@ -6,17 +6,23 @@ Spring 2022 Project
 
 ## Purpose
 
- 
+User can login and register to use the application. 
 
 ## How it works
 
+User will login and register by providing username and password.
 
 
 ## How to install and Execute
 
+1. run git clone https://github.com/airavata-courses/Viyad.git
+2. go to Viyad folder
+3. run docker-compose up
+
 ### Prerequisites
 
 ### Software Requirements
+Docker Application. The [Docker Installation Official Guide](https://docs.docker.com/get-docker/), is the official installation guide provided by the Docker team. Please install the Docker application based on the operating system of the user and follow the steps given in the installation guide
 
 ### Execution Steps
 
