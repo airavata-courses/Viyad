@@ -9,8 +9,7 @@ This Web Application is used for displaying weather visualizations to the user a
 
 ## How it works
 Initially, user will login and enter My Reports Page where already existing reports of respective users are displayed.
-User will go to create report page and try to click on the required radar to get the respective weather data.Further, if user wants to save the report/dashboard, they can click Save and the data will be saved in Persistence Db using persistence service api calls. This data will be fetched on my reports page so that user persistence is maintained.
-
+On the Create Page user can select the location from the map using the markers present in the map. The marker represents the locations of the radar stations throughout the USA. Now when the user chooses a particular radar station by clicking on the marker, this then get the data from the data service and shows the visualization on the map. If no data is present for the given combination of radar location and the date time selected by the user the visualization will show a blank white image which represents that no data is present and to try some other combination.
 All the API calls made in the UI are made through API Gateway which acts as a middleware between UI and all other microservices
  
 
