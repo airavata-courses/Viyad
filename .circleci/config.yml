@@ -13,7 +13,7 @@ jobs:
       - run:
           name: Run Unit Tests
           command: |
-            python -m py_compile manage.py
+            python -m py_compile ./app/rest.py
 workflows:
   build_test:
     jobs:
