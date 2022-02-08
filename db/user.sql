@@ -1,0 +1,12 @@
+CREATE DATABASE vtest;
+use vtest;
+
+create table pers_test(
+   pers_id INT NOT NULL AUTO_INCREMENT,
+   user_id INT NOT NULL,
+   pers_name VARCHAR(100) NOT NULL,
+   pers_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+   pers_location VARCHAR(100) NOT NULL,
+   updated_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+   PRIMARY KEY ( pers_id )
+);
