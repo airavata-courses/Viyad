@@ -6,6 +6,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Login to DockerHub
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - run:
           name: Install Python
           command: |
             apt-get update && apt-get install -y
