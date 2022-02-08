@@ -8,6 +8,7 @@ services:
       - "5000:5000"
 
   db:
+    platform: linux/x86_64
     image: mysql:8.0.21
     command: --default-authentication-plugin=caching_sha2_password
     ports:
