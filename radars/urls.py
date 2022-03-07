@@ -5,7 +5,9 @@ from .views import RadarInfoViewSet
 
 urlpatterns = [
     path('radars',RadarInfoViewSet.as_view({
-        'get': 'list',
+        'get': 'list'
+    })), 
+    path('getData', RadarInfoViewSet.as_view({
         'post':'getData'
-    })) 
+    }))
 ]
