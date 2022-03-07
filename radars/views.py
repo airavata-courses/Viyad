@@ -84,15 +84,15 @@ class RadarInfoViewSet(viewsets.ViewSet):
             fig = plt.figure(figsize=(10, 10))
             ax = new_map(fig, data.StationLongitude, data.StationLatitude)
             ax.pcolormesh(x, y, ref, cmap=ref_cmap, norm=ref_norm, zorder=0)
-            plt.savefig('cache/'+radar_station+str(time)+'.png')
+            #plt.savefig('cache/'+radar_station+str(time)+'.png')
             # img = open('cache/'+radar_station+str(time)+'.png', 'rb')
-            with open('cache/'+radar_station+str(time)+'.png', 'rb') as img_file:
-                imageString = base64.b64encode(img_file.read())
+            #with open('cache/'+radar_station+str(time)+'.png', 'rb') as img_file:
+                #imageString = base64.b64encode(img_file.read())
             # response = FileResponse(img)
             rs._session.close()
-            return Response(imageString)
+            return Response("Plt fetched and stored in cache")
         else:
-            with open('cache/SS.png', 'rb') as img_file:
-                imageString = base64.b64encode(img_file.read())
+            #with open('cache/SS.png', 'rb') as img_file:
+                #imageString = base64.b64encode(img_file.read())
             rs._session.close()
-            return Response(imageString)
+            return Response("Data not found")
