@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router()
 const apiAdapter = require('./apiAdapter')
 
-const BASE_URL = 'dservice-service:30000'
+const BASE_URL = 'persistenceservice-service:5000'
 const api = apiAdapter(BASE_URL)
 
 // router.get('/users', (req, res) => {
