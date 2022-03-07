@@ -1,0 +1,146 @@
+"""Code for a flask API to Create, Read, Update, Delete users"""
+import os
+from flask import jsonify, request, Flask
+from flaskext.mysql import MySQL
+import pymysql
+
+app = Flask(__name__)
+
+mysql = MySQL()
+
+# MySQL configurations
+app.config["MYSQL_DATABASE_USER"] = "root"
+app.config["MYSQL_DATABASE_PASSWORD"] = os.getenv("db_root_password")
+app.config["MYSQL_DATABASE_DB"] = os.getenv("db_name")
+app.config["MYSQL_DATABASE_HOST"] = os.getenv("MYSQL_SERVICE_HOST")
+app.config["MYSQL_DATABASE_PORT"] = int(os.getenv("MYSQL_SERVICE_PORT"))
+mysql.init_app(app)
+
+
+@app.route('/')
+def test():
+    messsage = {"Success":"Flask app running successfully"}
+    resp = jsonify(messsage)
+    resp.status_code = 200
+    return resp    
+    
+
+@app.route('/addpersistence', methods=['POST'])
+def add_persistence():
+    try:
+        _json = request.json
+        _name = _json['name']
+        _userid = _json['userId']
+        _date = _json['date']
+        _location = _json['location']            
+        # validate the received values
+        if _name  and _location and request.method == 'POST':
+            # save edits
+            sql = "INSERT INTO pers_test(pers_name,user_id, pers_date, pers_location) VALUES(%s, %s, %s, %s)"
+            data = (_name,_userid, _date, _location,)
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.execute(sql, data)
+            conn.commit()
+            resp = jsonify('Persistence added successfully!')
+            resp.status_code = 200
+            return resp
+        else:
+            return not_found()
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close() 
+        conn.close()
+  
+		
+@app.route('/persistences/<int:userId>')
+def get_all_persistences(userId):
+	try:
+		conn = mysql.connect()
+		cursor = conn.cursor(pymysql.cursors.DictCursor)
+		cursor.execute("SELECT * FROM pers_test where user_id =%s order by updated_time desc",userId)
+		rows = cursor.fetchall()
+		resp = jsonify(rows)
+		resp.status_code = 200
+		return resp
+	except Exception as e:
+		print(e)
+	finally:
+		cursor.close() 
+		conn.close()  
+
+@app.route('/persistence/<int:id>')
+def get_persistence_data(id):
+	try:
+		conn = mysql.connect()
+		cursor = conn.cursor(pymysql.cursors.DictCursor)
+		cursor.execute("SELECT * FROM pers_test WHERE pers_id=%s", id)
+		row = cursor.fetchone()
+		resp = jsonify(row)
+		resp.status_code = 200
+		return resp
+	except Exception as e:
+		print(e)
+	finally:
+		cursor.close() 
+		conn.close()
+
+@app.route('/updatepersistence', methods=['POST'])
+def update_persistence():
+    try:
+        _json = request.json
+        _id = _json['id']
+        _name = _json['name']
+        _date = _json['date']
+        _location = _json['location']
+        # validate the received values
+        if _name and _location and _id and request.method == 'POST':
+            #do not save password as a plain text
+            # save edits
+            sql = "UPDATE pers_test SET pers_name=%s, pers_date=%s, pers_location=%s WHERE pers_id=%s"
+            data = (_name,_date, _location, _id,)
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.execute(sql, data)
+            conn.commit()
+            resp = jsonify('Persistence updated successfully!')
+            resp.status_code = 200
+            return resp
+        else:
+            return not_found()
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close() 
+        conn.close()
+
+@app.route('/deletepersistence/<int:id>')
+def delete_persistence(id):
+	try:
+		conn = mysql.connect()
+		cursor = conn.cursor()
+		cursor.execute("DELETE FROM pers_test WHERE pers_id=%s", (id,))
+		conn.commit()
+		resp = jsonify('Persistence deleted successfully!')
+		resp.status_code = 200
+		return resp
+	except Exception as e:
+		print(e)
+	finally:
+		cursor.close() 
+		conn.close()
+
+@app.errorhandler(404)
+def not_found(error=None):
+    message = {
+        'status': 404,
+        'message': 'Not Found: ' + request.url,
+    }
+    resp = jsonify(message)
+    resp.status_code = 404
+    return resp
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
