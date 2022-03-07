@@ -16,8 +16,11 @@ import os
 class RadarInfoViewSet(viewsets.ViewSet):
 
     def list(self, request): #/api/radar
+        print("Get Radar Info")
         rs = RadarServer('http://tds-nexrad.scigw.unidata.ucar.edu/thredds/radarServer/nexrad/level2/S3/')
-        return Response(rs.stations)
+        data = rs.stations
+        rs._session.close()
+        return Response(data)
     
     def fileCheck(self, filePath):
         try:
@@ -86,8 +89,10 @@ class RadarInfoViewSet(viewsets.ViewSet):
             with open('cache/'+radar_station+str(time)+'.png', 'rb') as img_file:
                 imageString = base64.b64encode(img_file.read())
             # response = FileResponse(img)
+            rs._session.close()
             return Response(imageString)
         else:
             with open('cache/SS.png', 'rb') as img_file:
                 imageString = base64.b64encode(img_file.read())
+            rs._session.close()
             return Response(imageString)
