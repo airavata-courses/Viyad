@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authservice-deployment
+  labels:
+    app: authservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authservice
+  template:
+    metadata:
+      labels:
+        app: authservice
+    spec:
+      containers:
+      - name: authservice
+        image: renukasrishti/authenticationservice:authservice
+        env:
+        - name: PLSQL_HOST
+          value: viyad-postgres
+        - name: PLSQL_USER
+          value: postgres
+        - name: PLSQL_PASSWORD
+          value: password
+        - name: POSTGRES_DB
+          value: userloginauthdb
+        - name: PLSQL_PORT
+          value: "5432"
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authservice-service
+spec:
+  selector:
+    app: authservice
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 31000
