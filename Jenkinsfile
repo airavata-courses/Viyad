@@ -14,5 +14,10 @@ pipeline {
             sh 'mvn test'
          }
       }
+      stage('Deploy') {
+         steps {
+            sh 'kubectl replace -f auth-deployment.yaml'
+         }
+      }
    }
 }
