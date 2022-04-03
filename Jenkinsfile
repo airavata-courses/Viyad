@@ -16,9 +16,9 @@ pipeline {
       }
       stage('Deploy') {
          steps {
-         withKubeConfig([credentialsId: 'minikubeconfig']) {
-            sh 'kubectl replace -f auth-deployment.yaml'
-         }
+            script {
+               kubernetesDeploy(configs: "auth-deployment.yaml", kubeconfigId: "minikubeconfig")
+            }
          }
       }
    }
