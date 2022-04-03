@@ -17,7 +17,7 @@ pipeline {
       stage('Deploy') {
          steps {
             script {
-               kubernetesDeploy(configs: "auth-deployment.yaml", kubeconfigId: "minikubeconfig")
+               kubernetesDeploy(configs: "auth-deployment.yaml", kubeconfigId: "minikubeconfigjenkins")
             }
          }
       }
