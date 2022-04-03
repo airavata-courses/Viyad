@@ -15,8 +15,10 @@ pipeline {
          }
       }
       stage('Deploy') {
+         steps {
          withKubeConfig([credentialsId: 'minikubeconfig']) {
             sh 'kubectl replace -f auth-deployment.yaml'
+         }
          }
       }
    }
