@@ -1,5 +1,10 @@
 pipeline {
-   agent any
+   agent {
+    kubernetes {
+      	cloud 'kubernetes'
+      	defaultContainer 'jnlp'
+      }
+    }
    tools { 
       maven 'MAVEN_HOME' 
     }
@@ -17,7 +22,7 @@ pipeline {
       stage('Deploy') {
          steps {
             script {
-               sh 'kubectl get deployments -n jenkins'
+               kubernetesDeploy(configs: "auth-deployment.yaml", kubeconfigId: "minikubeconfigjenkins")
             }
          }
       }
