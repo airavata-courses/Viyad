@@ -17,8 +17,6 @@ pipeline {
       stage('Deploy') {
          steps {
             sshagent(["kube"]) {
-               sh "ssh -o StrictHostKeyChecking=no exouser@149.165.159.236"
-               sh "whoami"
                sh 'export KUBECONFIG=/home/exouser/.kube/config && kubectl apply -f auth-deployment.yaml'
             }
          }
