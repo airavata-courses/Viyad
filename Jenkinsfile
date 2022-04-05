@@ -16,7 +16,7 @@ pipeline {
       }
       stage('Deploy') {
          steps {
-            script {
+            sshagent(["kube"]) {
               sh 'kubectl apply -f auth-deployment.yaml'
             }
          }
