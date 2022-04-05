@@ -16,6 +16,7 @@ pipeline {
       }
       stage('Kubernetes Deployment') {
          steps {
+            sh 'whoami'
              sh 'export KUBECONFIG=/home/exouser/.kube/config && kubectl apply -f auth-deployment.yaml'
          }
       }
