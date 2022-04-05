@@ -17,7 +17,7 @@ pipeline {
       stage('Deploy') {
          steps {
             sshagent(["kube"]) {
-               sh "ssh exouser@149.165.159.236"
+               sh "ssh -o StrictHostKeyChecking=no exouser@149.165.159.236"
                sh 'kubectl apply -f auth-deployment.yaml'
             }
          }
