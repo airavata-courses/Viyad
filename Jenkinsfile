@@ -17,7 +17,8 @@ pipeline {
       stage('Deploy') {
          steps {
             sshagent(["kube"]) {
-              sh 'kubectl apply -f auth-deployment.yaml'
+               sh "exouser@149.165.159.236"
+               sh 'kubectl apply -f auth-deployment.yaml'
             }
          }
       }
