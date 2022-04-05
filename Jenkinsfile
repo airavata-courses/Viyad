@@ -17,9 +17,7 @@ pipeline {
       stage('Deploy') {
          steps {
             script {
-               withKubeConfig([credentialsId: 'minikubeconfigjenkins']) {
-                  sh 'kubectl apply -f auth-deployment.yaml'
-               }
+              sh 'kubectl apply -f auth-deployment.yaml'
             }
          }
       }
