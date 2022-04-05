@@ -14,11 +14,9 @@ pipeline {
             sh 'mvn test'
          }
       }
-      stage('Deploy') {
+      stage('Kubernetes Deployment') {
          steps {
-            sshagent(["kube"]) {
-               sh 'export KUBECONFIG=/home/exouser/.kube/config && kubectl apply -f auth-deployment.yaml'
-            }
+             sh 'export KUBECONFIG=/home/exouser/.kube/config && kubectl apply -f auth-deployment.yaml'
          }
       }
    }
