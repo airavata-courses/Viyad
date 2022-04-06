@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: persistenceservice-deployment
+  labels:
+    app: persistenceservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: persistenceservice
+  template:
+    metadata:
+      labels:
+        app: persistenceservice
+    spec:
+      containers:
+        - name: persistenceservice
+          image: renukasrishti/persistenceservice:persistenceservice
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          env:
+            - name: db_root_password
+              valueFrom:
+                secretKeyRef:
+                  name: persistenceservice-secrets
+                  key: db_root_password
+            - name: db_name
+              value: persistencedb
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: persistenceservice-service
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+    nodePort: 32000
+  selector:
+    app: persistenceservice
+  type: NodePort
