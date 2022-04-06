@@ -30,7 +30,6 @@ spec:
           value: "5432"
         ports:
         - containerPort: 8080
-      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
