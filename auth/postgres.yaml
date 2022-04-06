@@ -37,8 +37,8 @@ spec:
               value: password
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
-            - name: POSTGRES_DATABASES
-              value: userloginauthdb:postgres
+            - name: POSTGRES_DB
+              value: userloginauthdb
           ports:
             - containerPort: 5432
               name: postgres
