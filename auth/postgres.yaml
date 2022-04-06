@@ -45,6 +45,7 @@ spec:
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
