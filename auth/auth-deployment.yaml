@@ -17,7 +17,6 @@ spec:
       containers:
       - name: authservice
         image: renukasrishti/authenticationservice:authservice
-        imagePullPolicy: "Always"
         env:
         - name: PLSQL_HOST
           value: viyad-postgres
@@ -31,6 +30,7 @@ spec:
           value: "5432"
         ports:
         - containerPort: 8080
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
