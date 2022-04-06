@@ -29,6 +29,8 @@ pipeline {
          steps {
             dir('auth') {
                sh 'docker build -t authenticationservice .'
+               sh 'docker tag authenticationservice:latest renukasrishti/authenticationservice:authservice'
+               sh 'docker push renukasrishti/authenticationservice:authservice'
             }
          }
       }
