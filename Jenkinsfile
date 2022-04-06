@@ -41,7 +41,7 @@ pipeline {
       stage('Kubernetes Deployment') {
          steps {
             dir('auth') {
-               sh 'export KUBECONFIG=/home/exouser/.kube/config && kubectl apply -f auth-deployment.yaml'
+               sh 'export KUBECONFIG=/home/exouser/.kube/config && kubectl apply -f postgres.yaml && kubectl apply -f auth-deployment.yaml'
             }
          }
       }
