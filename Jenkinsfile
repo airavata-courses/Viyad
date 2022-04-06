@@ -16,7 +16,11 @@ pipeline {
       }
       stage('Build') {
          steps {
-            sh 'docker version'
+            sh 'mvn install'
+         }
+      }
+      stage('Docker Image Build') {
+         steps {
             sh 'docker build -t authenticationservice .'
          }
       }
