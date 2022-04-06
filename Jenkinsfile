@@ -1,5 +1,8 @@
 pipeline {
    agent any
+   environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub-renuka-jenkins')
+	}
    tools { 
       maven 'MAVEN_HOME' 
     }
@@ -30,6 +33,7 @@ pipeline {
             dir('auth') {
                sh 'docker build -t authenticationservice .'
                sh 'docker tag authenticationservice:latest renukasrishti/authenticationservice:authservice'
+               sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                sh 'docker push renukasrishti/authenticationservice:authservice'
             }
          }
@@ -40,6 +44,11 @@ pipeline {
                sh 'export KUBECONFIG=/home/exouser/.kube/config && kubectl apply -f auth-deployment.yaml'
             }
          }
+      }
+   }
+   post {
+      always {
+         sh 'docker logout'
       }
    }
 }
