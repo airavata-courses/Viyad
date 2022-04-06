@@ -15,12 +15,13 @@ pipeline {
          }
       }
       stage('Build') {
-         sh 'docker version'
-         sh 'docker build -t authenticationservice .'
+         steps {
+            sh 'docker version'
+            sh 'docker build -t authenticationservice .'
+         }
       }
       stage('Kubernetes Deployment') {
          steps {
-            sh 'whoami'
             sh 'export KUBECONFIG=/home/exouser/.kube/config && kubectl apply -f auth-deployment.yaml'
          }
       }
