@@ -10,6 +10,6 @@ public class HelloController {
 
     @GetMapping(DEFAULT_PATH)
     public ResponseEntity<String> defaultPath() {
-        return ResponseEntity.ok("Auth Default Path");
+        return ResponseEntity.ok("Auth Default Path1");
     }
 }
