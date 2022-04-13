@@ -31,8 +31,7 @@ pipeline {
       stage('Docker Image Build') {
          steps {
             dir('auth') {
-               sh 'docker build -t authenticationservice .'
-               sh 'docker tag authenticationservice:latest renukasrishti/authenticationservice:authservice'
+               sh 'docker build --no-cache -t renukasrishti/authenticationservice:authservice .'
                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                sh 'docker push renukasrishti/authenticationservice:authservice'
             }
@@ -41,7 +40,7 @@ pipeline {
       stage('Kubernetes Deployment') {
          steps {
             dir('auth') {
-               sh 'export KUBECONFIG=/home/exouser/.kube/config && kubectl apply -f auth-deployment.yaml'
+               sh 'export KUBECONFIG=/home/exouser/.kube/config && kubectl apply -f auth-deployment.yaml && kubectl rollout restart deployment/authservice-deployment'
             }
          }
       }

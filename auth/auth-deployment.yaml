@@ -5,7 +5,7 @@ metadata:
   labels:
     app: authservice
 spec:
-  replicas: 5
+  replicas: 1
   selector:
     matchLabels:
       app: authservice
@@ -17,6 +17,7 @@ spec:
       containers:
       - name: authservice
         image: renukasrishti/authenticationservice:authservice
+        imagePullPolicy: Always
         env:
         - name: PLSQL_HOST
           value: viyad-postgres
@@ -24,7 +25,7 @@ spec:
           value: postgres
         - name: PLSQL_PASSWORD
           value: password
-        - name: POSTGRES_DB
+        - name: PLSQL_DB
           value: userloginauthdb
         - name: PLSQL_PORT
           value: "5432"
