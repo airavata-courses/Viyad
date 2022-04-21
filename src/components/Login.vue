@@ -23,7 +23,7 @@
                 <input type="password" class="form-control form-control-lg" id= "password"/>
             </div>
  
-            <button type="submit" class="btn btn-dark btn-lg btn-block" @click="signIn">Sign In</button>
+            <button type="submit" class="btn btn-dark btn-lg btn-block" @click="signIn($event)">Sign In</button>
 
 
         </form>
@@ -42,13 +42,14 @@ import axios from "axios";
             }
         },
         methods:{
-            signIn(){
+            signIn(event){
+                event.preventDefault()
                 var usrname = document.getElementById("uname").value
                 var password = document.getElementById("password").value
                 if (!usrname && !password){
                     this.showError = true
                     this.error_message = "Please enter username and password"
-                    return  
+                    return
 
                 }else if (!password){
                     this.showError = true
@@ -74,10 +75,10 @@ import axios from "axios";
                     },
                     })
                     .then((response) => {
-                        this.$router.push({ name: 'MyReports', params: {userId:response.data.id}})
                         if (isLocalStorage() /* function to detect if localstorage is supported*/) {
                           localStorage.setItem('userId', response.data.id)
-                        }
+                        }                        
+                        this.$router.push({ name: 'MyReports', params: {userId:response.data.id}})
                     })
                     .catch((error) => {
                         console.log(error);

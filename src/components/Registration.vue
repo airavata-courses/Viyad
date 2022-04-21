@@ -22,7 +22,7 @@
                 <input type="password" class="form-control form-control-lg" id = "password"/>
             </div>
  
-            <button type="submit" class="btn btn-dark btn-lg btn-block" @click="signUp">Sign Up</button>
+            <button type="submit" class="btn btn-dark btn-lg btn-block" @click="signUp($event)">Sign Up</button>
  
             <p class="forgot-password text-right">
                 Already registered 
@@ -39,11 +39,13 @@ import axios from "axios";
         name: "Registration",
         data() {
             return {
-                showError: false
+                showError: false,
+                error_message: ""
             }
         },
         methods:{
-            signUp(){
+            signUp(event){
+                event.preventDefault()
                 var usrname = document.getElementById("uname").value
                 var password = document.getElementById("password").value
                 if (!usrname && !password){
